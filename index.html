@@ -3,102 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <title>jensbrink.com</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
     <style>
-        body {
+        html, body {
             margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
             overflow: hidden;
             background-color: rgb(224, 228, 232);
-            touch-action: none; /* Prevent default touch interactions */
+            touch-action: none;
+        }
+
+        body {
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+
+        canvas {
+            display: block;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
         }
     </style>
 </head>
 <body>
     <script>
         // Constants
-
-        // Base dimensions
         const BASE_WINDOW_HEIGHT = 800;
-
-        // Wave counts
         const BASE_WAVE_COUNT_BACKGROUND = 3;
         const BASE_WAVE_COUNT_MAIN = 4;
         const MAX_WAVE_COUNT_BACKGROUND = 6;
         const MAX_WAVE_COUNT_MAIN = 8;
-
-        // Wave spacing
         const BASE_MIN_VERTICAL_SPACING = 120;
-
-        // Frame rate
         const FRAME_RATE = 45;
-
-        // Wave speed controls
         const BASE_SPEED_BACKGROUND = 0.15;
         const BASE_SPEED_MAIN = 0.15;
-        const SPEED_VARIATION_RANGE = 0.25; // +/- value
-
-        // Alpha controls
+        const SPEED_VARIATION_RANGE = 0.25;
         const MAX_ALPHA = 180;
-
-        // Color settings
         const BACKGROUND_COLOR = [224, 228, 232];
-
-        // User interaction intensity controls
-        const PARALLAX_INTENSITY = 0.005;     // Controls parallax effect intensity
-        const FREQUENCY_INTENSITY = 0.0001;   // Controls how much pointerX affects frequency
-        const HEIGHT_ADJUST_INTENSITY = 0.05; // Controls how much pointerY affects wave height
+        const PARALLAX_INTENSITY = 0.005;
+        const FREQUENCY_INTENSITY = 0.0001;
+        const HEIGHT_ADJUST_INTENSITY = 0.05;
 
         // Global Variables
-
         let waves = [];
         let WAVE_COUNT_BACKGROUND;
         let WAVE_COUNT_MAIN;
         let MIN_VERTICAL_SPACING;
-
         let targetPointerX, targetPointerY;
         let currentPointerX, currentPointerY;
 
-        // p5.js Setup and Draw Functions
-
         function setup() {
-            createCanvas(windowWidth * 1.1, windowHeight * 1.1);
-            frameRate(FRAME_RATE);
+            createCanvas(window.innerWidth, window.innerHeight);
             noFill();
+            frameRate(FRAME_RATE);
 
             computeDerivedConstants();
 
-            // Initialize pointer positions to center of canvas
             targetPointerX = width / 2;
             targetPointerY = height / 2;
             currentPointerX = width / 2;
             currentPointerY = height / 2;
 
-            // Add initial waves
-            addInitialWaves(WAVE_COUNT_BACKGROUND, true);  // Background waves
-            addInitialWaves(WAVE_COUNT_MAIN, false);       // Main waves
+            addInitialWaves(WAVE_COUNT_BACKGROUND, true);
+            addInitialWaves(WAVE_COUNT_MAIN, false);
         }
 
         function draw() {
-            // Smoothly interpolate currentPointerX and currentPointerY towards targetPointerX and targetPointerY
             currentPointerX = lerp(currentPointerX, targetPointerX, 0.1);
             currentPointerY = lerp(currentPointerY, targetPointerY, 0.1);
 
-            background(...BACKGROUND_COLOR); // Clear the canvas
+            background(...BACKGROUND_COLOR);
 
-            translate(-width * 0.05, -height * 0.05); // Center the viewport
+            // Remove translate if present
+            // translate(-width * 0.05, -height * 0.05);
 
-            // Update and draw waves
             waves = waves.filter(wave => {
                 wave.display();
                 wave.move();
                 wave.updateProperties();
-                return wave.alpha > 0; // Keep only visible waves
+                return wave.alpha > 0;
             });
 
-            // Ensure the desired number of main waves
             maintainWaveCount();
 
-            // Randomly fade in or out main waves at intervals
             if (frameCount % 150 === 0) {
                 toggleWaveFade(true);
                 toggleWaveFade(false);
@@ -106,11 +102,9 @@
         }
 
         // Utility Functions
-
-        // Compute constants that depend on window size
         function computeDerivedConstants() {
-            const sizeRatio = windowHeight / BASE_WINDOW_HEIGHT;
-            const scalingFactor = 1 + (sizeRatio - 1) * 0.3; // Reduced sensitivity
+            const sizeRatio = height / BASE_WINDOW_HEIGHT;
+            const scalingFactor = 1 + (sizeRatio - 1) * 0.3;
 
             WAVE_COUNT_BACKGROUND = constrain(
                 floor(BASE_WAVE_COUNT_BACKGROUND * scalingFactor),
@@ -124,17 +118,15 @@
                 MAX_WAVE_COUNT_MAIN
             );
 
-            MIN_VERTICAL_SPACING = windowHeight * (BASE_MIN_VERTICAL_SPACING / BASE_WINDOW_HEIGHT);
+            MIN_VERTICAL_SPACING = height * (BASE_MIN_VERTICAL_SPACING / BASE_WINDOW_HEIGHT);
         }
 
-        // Add initial waves
         function addInitialWaves(count, isBackground) {
             for (let i = 0; i < count; i++) {
                 addWave(isBackground, true);
             }
         }
 
-        // Add a new wave
         function addWave(isBackground, initialVisible = false) {
             const yOffset = findValidYOffset(0, height);
             const { waveHeight, frequency, speed } = generateWaveProperties(isBackground);
@@ -158,9 +150,8 @@
             }));
         }
 
-        // Generate wave properties
         function generateWaveProperties(isBackground) {
-            const heightScale = 1; // Reduced impact of screen size on wave height
+            const heightScale = 1;
             let waveHeight, frequency;
 
             if (random() < 0.35) {
@@ -178,7 +169,6 @@
             return { waveHeight, frequency, speed };
         }
 
-        // Find a valid vertical position for a new wave
         function findValidYOffset(minY, maxY) {
             let attempts = 0;
             let yOffset;
@@ -193,14 +183,12 @@
             return yOffset;
         }
 
-        // Maintain the number of main waves
         function maintainWaveCount() {
             while (waves.filter(wave => !wave.isBackground).length < WAVE_COUNT_MAIN) {
                 addWave(false);
             }
         }
 
-        // Fade in or out a wave
         function toggleWaveFade(fadeIn) {
             const targetWaves = waves.filter(wave =>
                 !wave.isBackground && (fadeIn ? wave.alpha <= 0 : wave.alpha >= MAX_ALPHA)
@@ -212,7 +200,6 @@
         }
 
         // Wave Class
-
         class Wave {
             constructor({ waveHeight, speed, yOffset, alpha, isBackground, frequency, strokeColor }) {
                 this.waveHeight = waveHeight;
@@ -229,7 +216,6 @@
                 this.fadeSpeed = random(0.1, 0.4);
             }
 
-            // Display the wave
             display() {
                 const parallaxOffset = currentPointerX * (this.isBackground ? PARALLAX_INTENSITY : PARALLAX_INTENSITY * 2);
 
@@ -245,15 +231,14 @@
                 this.noiseOffset += 0.001;
             }
 
-            // Draw the wave shape
             drawWave(alphaFactor, parallaxOffset = 0) {
                 stroke(this.getDynamicColor(alphaFactor));
                 beginShape();
 
-                const xIncrement = windowWidth / 100;
+                const xIncrement = width / 100;
                 for (let x = 0; x < width; x += xIncrement) {
                     const adjustedX = x + parallaxOffset;
-                    const amplitudeVariation = sin(adjustedX * 0.008 + this.noiseOffset) * (windowHeight * 0.005);
+                    const amplitudeVariation = sin(adjustedX * 0.008 + this.noiseOffset) * (height * 0.005);
                     const amplitude = this.waveHeight + amplitudeVariation;
                     const waveY = sin(adjustedX * this.frequency + this.offset) * amplitude;
                     vertex(x, this.yOffset + waveY);
@@ -261,26 +246,21 @@
                 endShape();
             }
 
-            // Move the wave
             move() {
                 const noiseFactor = map(noise(this.noiseOffset + 500), 0, 1, -0.005, 0.005);
                 this.offset += this.speed + noiseFactor;
             }
 
-            // Update wave properties based on user interaction
             updateProperties() {
                 this.alpha = constrain(this.alpha + this.fadeSpeed, 0, MAX_ALPHA);
 
-                // Adjust waveHeight based on currentPointerY position
                 const mouseFactor = map(currentPointerY, 0, height, 1, -1) * HEIGHT_ADJUST_INTENSITY;
                 this.waveHeight = this.originalWaveHeight * (1 + mouseFactor);
 
-                // Adjust frequency based on currentPointerX position
                 const freqFactor = map(currentPointerX, 0, width, -1, 1) * FREQUENCY_INTENSITY;
                 this.frequency = this.originalFrequency + freqFactor;
             }
 
-            // Get dynamic color with slight variation
             getDynamicColor(alphaFactor = 1.0) {
                 let [r, g, b] = [red(this.strokeColor), green(this.strokeColor), blue(this.strokeColor)];
                 const a = this.alpha * alphaFactor;
@@ -292,15 +272,12 @@
                 return color(r, g, b, a);
             }
 
-            // Start fading in or out
             startFading(fadeIn) {
                 this.fadeSpeed = fadeIn ? Math.abs(this.fadeSpeed) : -Math.abs(this.fadeSpeed);
             }
         }
 
         // Event Handlers
-
-        // Update target pointer positions on pointer movement
         function updatePointerPosition(x, y) {
             targetPointerX = x;
             targetPointerY = y;
@@ -318,10 +295,9 @@
             if (touches.length > 0) {
                 pointerMoved(touches[0].x, touches[0].y);
             }
-            return false; // Prevents default scrolling
+            return false;
         }
 
-        // Add wave on pointer press
         function pointerPressed() {
             addWave(false, true);
         }
@@ -332,15 +308,13 @@
 
         function touchStarted() {
             pointerPressed();
-            return false; // Prevents default behavior
+            return false;
         }
 
-        // Handle window resize
         function windowResized() {
-            resizeCanvas(windowWidth * 1.1, windowHeight * 1.1);
+            resizeCanvas(window.innerWidth, window.innerHeight);
             computeDerivedConstants();
 
-            // Clear and regenerate waves
             waves = [];
             addInitialWaves(WAVE_COUNT_BACKGROUND, true);
             addInitialWaves(WAVE_COUNT_MAIN, false);
