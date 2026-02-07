@@ -1,0 +1,265 @@
+:root {
+    /* Color Palette - Timeless Minimalist */
+    --bg-color: #ffffff;
+    --text-primary: #1d1d1f;
+    --text-secondary: #86868b;
+
+    /* Spacing & Layout */
+    --container-width: 980px;
+    --section-padding: 140px 0;
+
+    /* Transitions */
+    --transition-base: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: linear-gradient(135deg,
+            #ffffff 0%,
+            #f8f9fc 25%,
+            #f0f4ff 50%,
+            #e8f0ff 75%,
+            #e0ebff 100%);
+    background-attachment: fixed;
+    color: var(--text-primary);
+    line-height: 1.4;
+    letter-spacing: -0.015em;
+}
+
+
+
+.container {
+    width: 88%;
+    max-width: var(--container-width);
+    margin: 0 auto;
+}
+
+/* Navbar */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 24px 0;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    z-index: 1000;
+    transition: background 0.3s;
+}
+
+.nav-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    text-decoration: none;
+    letter-spacing: -0.02em;
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: 2.5rem;
+}
+
+.nav-links a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 400;
+    transition: color 0.2s;
+}
+
+.nav-links a:hover {
+    color: var(--text-primary);
+}
+
+/* Hero Section */
+.hero-section {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    background-color: transparent;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Canvas Styles */
+#hero-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    opacity: 0.6;
+}
+
+/* Animation Control */
+.animation-control {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--text-secondary);
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+
+.animation-control.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.animation-control:hover {
+    background: #ffffff;
+    color: var(--text-primary);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.animation-control svg {
+    width: 14px;
+    height: 14px;
+}
+
+
+
+/* Sections */
+.section {
+    padding: var(--section-padding);
+    text-align: center;
+}
+
+/* Contact Section - Minimalist Typographic */
+#contact {
+    background-color: transparent;
+    padding: 180px 0;
+    /* More vertical whitespace */
+}
+
+.contact-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* Center everything */
+    justify-content: center;
+    text-align: center;
+    gap: 1.5rem;
+    max-width: 100%;
+}
+
+.contact-label {
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.email-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+
+.hero-email {
+    font-family: 'Inter', sans-serif;
+    font-size: clamp(2rem, 3vw, 3rem);
+    /* Responsive giant text */
+    font-weight: 600;
+    color: var(--text-primary);
+    text-decoration: none;
+    letter-spacing: -0.03em;
+    transition: color 0.3s ease;
+    cursor: copy;
+    /* Hint at functionality */
+    position: relative;
+    line-height: 1.1;
+}
+
+.hero-email:hover {
+    color: #000;
+    /* Darker black on hover */
+}
+
+/* Subtle underline interaction */
+.hero-email::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    /* Slightly thicker */
+    background-color: var(--text-primary);
+    transform: scaleX(0);
+    transform-origin: bottom right;
+    transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.hero-email:hover::after {
+    transform: scaleX(1);
+    transform-origin: bottom left;
+}
+
+/* Tooltip */
+.copy-tooltip {
+    position: absolute;
+    top: -40px;
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    background-color: var(--text-primary);
+    color: var(--bg-color);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    /* Added kerning */
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s ease;
+}
+
+.copy-tooltip.visible {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+/* Simple Visual Footer */
+.visual-footer {
+    width: 88%;
+    max-width: var(--container-width);
+    height: 1px;
+    background-color: rgba(0, 0, 0, 0.15);
+    /* Slightly more visible */
+    margin: 4rem auto 3rem auto;
+    /* Added more top margin to separate it */
+}

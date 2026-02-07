@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jens Brink</title>
+    <meta name="description" content="Jens Brink">
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="container nav-content">
+            <a href="#" class="logo">Jens Brink</a>
+            <ul class="nav-links">
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+        <section id="hero" class="hero-section">
+            <canvas id="hero-canvas"></canvas>
+            <button id="animation-toggle" class="animation-control" aria-label="Pause animation">
+                <svg class="icon-pause" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path d="M10 4H6V20H10V4Z" fill="currentColor" />
+                    <path d="M18 4H14V20H18V4Z" fill="currentColor" />
+                </svg>
+                <svg class="icon-play" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    xmlns="http://www.w3.org/2000/svg" style="display: none;">
+                    <path d="M8 5V19L19 12L8 5Z" fill="currentColor" />
+                </svg>
+            </button>
+        </section>
+
+        <section id="contact" class="section">
+            <div class="container contact-container">
+                <p class="contact-label">Get in touch</p>
+                <div class="email-wrapper">
+                    <a href="mailto:jens@jensbrink.com" id="email-link" class="hero-email">
+                        jens@jensbrink.com
+                        <span class="copy-tooltip">Copied!</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div class="visual-footer"></div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
